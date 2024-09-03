@@ -7,7 +7,13 @@ NestJs / Serverless / AWS API Gateway Lambda API
 $ pnpm install
 ```
 
-## Project Develop
+## Project build
+
+```bash
+$ pnpm build:all
+```
+
+## Project Serverless Test
 
 ```bash
 $ cd apps/[items, users, ...]
