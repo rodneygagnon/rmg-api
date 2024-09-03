@@ -1,5 +1,5 @@
 # rmg-api
-NestJs / Serverless / AWS API Gateway Lambda API
+NestJs / Serverless / AWS API Gateway, Lambda
 
 ## Project setup
 
