@@ -1,0 +1,71 @@
+service: items
+
+plugins:
+  # - serverless-offline
+
+# custom:
+#     serverless-offline:
+#         httpPort: 3006
+#         lambdaPort: 3008
+
+functions:
+  createItem:
+    handler: dist/lambda.createItem
+    events:
+      - http:
+          method: POST
+          path: /items
+
+  getItem:
+    handler: dist/lambda.getItem
+    events:
+      - http:
+          method: GET
+          path: /items/{id}
+          request: 
+            parameters: 
+              paths: 
+                id: true
+  getItems:
+    handler: dist/lambda.getItems
+    events:
+      - http:
+          method: GET
+          path: /items
+
+provider:
+  name: aws
+  region: us-west-1
+  runtime: nodejs20.x
+  stage: dev
+  environment:
+    DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Scan  
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+      Resource: 
+        Fn::Join:
+          - ''
+          - - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/"
+            - ${self:provider.environment.DYNAMODB_TABLE}
+
+resources:
+  Resources:
+    ItemsTable: 
+      Type: AWS::DynamoDB::Table
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.DYNAMODB_TABLE}  

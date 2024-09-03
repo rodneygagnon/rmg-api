@@ -1,0 +1,7 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: rodneygagnon
+services:
+  items:
+    path: apps/items
+  users:
+    path: apps/users
